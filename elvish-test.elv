@@ -129,6 +129,7 @@ fn pretty-print { |status tests|
 
     if (has-key $test-run stack-trace) {
       echo "    "$test-run[stack-trace]
+    }
   }
 }
 
