@@ -65,7 +65,7 @@ fn run-tests { |tests|
     var message = ok
 
     if (eq $status "fail") {
-      set message = "Expected \""$test-result[expected]"\", but got \""$test-result[actual]"\"!"
+      set message = "Expected \""(echo $test-result[expected])"\", but got \""(echo $test-result[actual])"\"!"
     }
 
     if (eq $status "error") {
