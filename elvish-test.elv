@@ -1,6 +1,6 @@
-fn make-test { |name test-input expected|
+fn make-test { |function-name test-name test-input expected|
   var test-function = {}
-  eval "set test-function = {\n    var test = [\n      &name=\""$name"\"\n      &expected=\""$expected"\"\n    ]\n    try {\n      use ./solution\n      put (assoc $test actual (solution:hey \""$test-input"\"))\n    } catch error {\n      fail (assoc $test message $error)\n    }\n  }"
+  eval "set test-function = {\n    var test = [\n      &test-name=\""$test-name"\"\n      &expected=\""$expected"\"\n    ]\n    try {\n      put (assoc $test actual ("$function-name" \""$test-input"\"))\n    } catch error {\n      fail (assoc $test message $error)\n    }\n  }"
   put $test-function
 }
 
@@ -34,7 +34,7 @@ fn run-tests { |tests|
       set test-result = ($test)
     } catch e {
       # for future reference, here is a sample of an error I got back 😁
-      # [^exception &reason=[^fail-error &content=[&expected=Whatever. &message=[^exception &reason=<unknown variable $solution:hey~ not found> &stack-trace=<...>] &name='stating something'] &type=fail] &stack-trace=<...>]
+      # [^exception &reason=[^fail-error &content=[&expected=Whatever. &message=[^exception &reason=<unknown variable $solution:hey~ not found> &stack-trace=<...>] &test-name='stating something'] &type=fail] &stack-trace=<...>]
       set test-result = $e[reason][content]
       set status = "error"
     } else {
@@ -46,7 +46,7 @@ fn run-tests { |tests|
     }
 
     var final-test-result = [
-      &name=$test-result[name]
+      &test-name=$test-result[test-name]
       &status=$status
     ]
 
@@ -108,7 +108,7 @@ fn pretty-print { |status tests|
   # now go through all of the test runs and print each of them
 
   for test-run $tests {
-    print "  "$test-run[name]": "
+    print "  "$test-run[test-name]": "
     print-status $test-run[status]
     if (not-eq $test-run[status] pass) {
       echo "    "$test-run[message]
