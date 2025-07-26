@@ -99,16 +99,16 @@ fn get-run-status { |test-runs|
 }
 
 fn print-status { |status|
-  var style = blue
+  var style = [blue]
   if (eq $status pass) {
-    set style = green
+    set style = [green]
   } elif (eq $status fail) {
-    set style = red
+    set style = [red]
   } elif (eq $status error) {
-    set style = red bold
+    set style = [red bold]
   }
 
-  echo (styled $status $style)
+  echo (styled $status $@style)
 }
 
 fn pretty-print { |status tests|
