@@ -83,8 +83,6 @@ fn run-tests { |tests|
 }
 
 fn get-run-status { |test-runs|
-  # I believe that the only way the status should come back "error"
-  # is if the count of $test-runs is zero
   var status = (fold { |e acc|
     if (or (eq $acc "fail") ^
                (or (eq $e[status] "fail") ^
@@ -97,7 +95,7 @@ fn get-run-status { |test-runs|
     }
   } $test-runs "error")
 
-  put status
+  put $status
 }
 
 fn print-status { |status|
@@ -125,4 +123,15 @@ fn pretty-print { |status tests|
     }
   }
 }
+
+fn run { |test-data|
+  var tests = []
+  for td $test-data {
+    set tests = (append $tests (make-test $@td))
+  }
+
+  var test-runs = (run-tests $tests)
+  pretty-print (get-run-status $test-runs) $test-runs
+}
+
 
