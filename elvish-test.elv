@@ -1,6 +1,18 @@
-fn make-test { |function-name test-name test-input expected|
-  var test-function = {}
-  eval "set test-function = {\n    var test = [\n      &test-name=\""$test-name"\"\n      &expected=\""$expected"\"\n    ]\n    try {\n      put (assoc $test actual ("$function-name" \""$test-input"\"))\n    } catch error {\n      fail (assoc $test message $error)\n    }\n  }"
+fn make-test { |function-under-test test-name test-input expected|
+  # the function under test must be passed in as variable
+  # so, if the function was defined with fn
+  # it has to be passed in as $fn-name~
+  var test-function = {
+    var test = [
+      &test-name=$test-name
+      &expected=$expected
+    ]
+
+    try {
+      put (assoc $test actual ($function-under-test $@test-input))
+    } catch e { fail (assoc $test message $e) }
+  }
+
   put $test-function
 }
 
@@ -104,8 +116,6 @@ fn print-status { |status|
 fn pretty-print { |status tests|
   print "run status: "
   print-status $status
-
-  # now go through all of the test runs and print each of them
 
   for test-run $tests {
     print "  "$test-run[test-name]": "
