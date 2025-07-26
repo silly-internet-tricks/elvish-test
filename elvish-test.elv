@@ -49,6 +49,7 @@ fn run-tests { |tests|
       # [^exception &reason=[^fail-error &content=[&expected=Whatever. &message=[^exception &reason=<unknown variable $solution:hey~ not found> &stack-trace=<...>] &test-name='stating something'] &type=fail] &stack-trace=<...>]
       set test-result = $e[reason][content]
       set status = "error"
+      set test-result[stack-trace] = $e[stack-trace]
     } else {
       if (eq $test-result[actual] $test-result[expected]) {
         set status = "pass"
@@ -74,6 +75,10 @@ fn run-tests { |tests|
 
     if (not-eq $status "pass") {
       set final-test-result = (assoc $final-test-result message $message)
+    }
+
+    if (has-key $test-result stack-trace) {
+      set final-test-result[stack-trace] = $test-result[stack-trace]
     }
 
     put $final-test-result
@@ -121,6 +126,9 @@ fn pretty-print { |status tests|
     if (not-eq $test-run[status] pass) {
       echo "    "$test-run[message]
     }
+
+    if (has-key $test-run stack-trace) {
+      echo "    "$test-run[stack-trace]
   }
 }
 
