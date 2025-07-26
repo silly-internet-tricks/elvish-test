@@ -70,7 +70,7 @@ fn run-tests { |tests|
   put $test-runs
 }
 
-fn get-run-status { |test-runs
+fn get-run-status { |test-runs|
   # I believe that the only way the status should come back "error"
   # is if the count of $test-runs is zero
   var status = (fold { |e acc|
