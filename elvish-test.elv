@@ -128,7 +128,8 @@ fn pretty-print { |status tests|
     }
 
     if (has-key $test-run stack-trace) {
-      echo "    "(echo $test-run[stack-trace])
+      # The stack-trace is not printable
+      # echo "    "(echo $test-run[stack-trace])
     }
   }
 }
